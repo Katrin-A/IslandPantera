@@ -8,5 +8,6 @@ public class Constants {
     public static final int INITIAL_PLANT_PERCENTAGE = 60;
     public static final int INITIAL_ANIMAL_PERCENTAGE = 30;
     public static final int NUMBER_OF_THREADS = 4;
+    public static final String DIET_MAP_PATH = "src/main/java/com/javarush/island/aleinik/resourses/diet.json";
 
 }

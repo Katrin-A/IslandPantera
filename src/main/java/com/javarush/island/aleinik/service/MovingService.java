@@ -8,6 +8,7 @@ public class MovingService implements GameService {
 
     @Override
     public void performTask(Island island, Sector sector) {
+
     }
 
 }

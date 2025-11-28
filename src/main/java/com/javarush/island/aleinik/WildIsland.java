@@ -1,6 +1,7 @@
 package com.javarush.island.aleinik;
 
 import com.javarush.island.aleinik.application.Initializer;
+import com.javarush.island.aleinik.entity.island.Island;
 import com.javarush.island.aleinik.service.GameProcessor;
 
 public class WildIsland {
@@ -14,10 +15,17 @@ public class WildIsland {
 
         GameProcessor processor = new GameProcessor(
                 initializer.getIsland(),
-                initializer.getSectors()
+                initializer.getSectors(),
+                initializer.getSpeciesConfig()
         );
         processor.init();
         processor.start();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException ignored) {}
+
+        processor.shutdown();
 
     }
 }

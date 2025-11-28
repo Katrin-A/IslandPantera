@@ -1,6 +1,7 @@
 package com.javarush.island.aleinik.entity.lifeforms;
 
 import com.javarush.island.aleinik.annotations.SpeciesInfo;
+import com.javarush.island.aleinik.entity.island.Cell;
 
 @SpeciesInfo(specieWeight = 0, maxPerCell = 0)
 public abstract class LifeForm {
@@ -27,9 +28,9 @@ public abstract class LifeForm {
         return currentGroupNumber;
     }
 
-    public void updateTotalWeight(double totalWeight){
+    public void updateTotalWeight(double totalWeight) {
         this.totalWeight = totalWeight;
-        this.currentGroupNumber = (int) (this.totalWeight /specieWeight);
+        this.currentGroupNumber = (int) (this.totalWeight / specieWeight);
     }
 
     public double getCurrentWeightPerAnimal() {

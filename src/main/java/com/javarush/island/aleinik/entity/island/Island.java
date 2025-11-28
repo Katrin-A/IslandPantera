@@ -4,9 +4,10 @@ import com.javarush.island.aleinik.entity.lifeforms.LifeFormFactory;
 
 import java.util.Set;
 
+import static java.util.Arrays.copyOfRange;
+
 public class Island {
     private final Cell[][] island;
-    //TODO we might not need this variable to be stored
     private LifeFormFactory factory;
 
     public Island(int width, int length, LifeFormFactory factory, Set<Class<? extends LifeForm>> species) {
@@ -15,17 +16,17 @@ public class Island {
         initializeIsland(species);
     }
 
-    public Cell[][] getIsland() {
-        return island;
-    }
 
     private void initializeIsland(Set<Class<? extends LifeForm>> species)  {
         for (int row = 0; row < island.length; row++) {
-            System.out.println("creating cells");
             for (int column = 0; column < island[0].length; column++) {
                 island[row][column] = new Cell(row, column, factory, species);
             }
         }
 
+    }
+
+    public Cell[][] getIslandMap() {
+        return island;
     }
 }

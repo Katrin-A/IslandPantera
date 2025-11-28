@@ -1,6 +1,7 @@
 package com.javarush.island.aleinik.entity.lifeforms.plants;
 
 import com.javarush.island.aleinik.annotations.SpeciesInfo;
+import com.javarush.island.aleinik.entity.island.Cell;
 
 @SpeciesInfo(specieWeight = 1, maxPerCell = 200, maxGroupSize = 50)
 public class Grass extends PlantGroup {

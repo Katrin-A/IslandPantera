@@ -5,19 +5,17 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 
 public class ClassScanner {
 
-    public static  List<Class<?>> getClasses(String packageName) {
+    public static  Set<Class<?>> getClasses(String packageName) {
         //TODO: remove IOException from the method signature
         //TODO work with exceptions !!! Create your own OR die!
 
         ClassLoader classLoader  = Thread.currentThread().getContextClassLoader();
         List<File> directories  = new ArrayList<>();
-        List<Class<?>> classes = new ArrayList<>();
+        Set<Class<?>> classes = new HashSet<>();
         if(classLoader != null){
 
             String path = packageName.replace('.', '/');
@@ -49,8 +47,8 @@ public class ClassScanner {
         return classes;
     }
 
-    public static List<Class<?>> findClasses(File directory, String packageName){
-        List<Class<?>> classes = new ArrayList<>();
+    public static Set<Class<?>> findClasses(File directory, String packageName){
+        Set<Class<?>> classes = new HashSet<>();
         if(!directory.exists()){
             return classes;
         }

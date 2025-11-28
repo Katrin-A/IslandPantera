@@ -2,6 +2,7 @@ package com.javarush.island.aleinik.entity.lifeforms;
 
 import com.javarush.island.aleinik.config.Parameters;
 import com.javarush.island.aleinik.config.SpeciesConfig;
+import com.javarush.island.aleinik.entity.island.Cell;
 import com.javarush.island.aleinik.entity.lifeforms.animals.AnimalGroup;
 import com.javarush.island.aleinik.entity.lifeforms.plants.PlantGroup;
 
@@ -41,8 +42,6 @@ public class LifeFormFactory {
                                 parameters.getSpecieWeight(),
                                 parameters.getFoodRequiredKg()
                         );
-                //TODO: remove print
-                System.out.println(aClass.getSimpleName() + " creating with quantity  " + integer);
                 lifeFormSet.add(animalGroup);
 
             } catch (Exception e) {

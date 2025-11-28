@@ -10,6 +10,7 @@ import com.javarush.island.aleinik.utils.ClassScanner;
 import javax.xml.transform.Result;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static com.javarush.island.aleinik.config.Constants.*;
 import static java.lang.Math.min;
@@ -61,14 +62,14 @@ public class Initializer {
     private void setConfig() {
         //TODO: remove sout
         System.out.println("Setting up Config");
-        List<Class<?>> classes = ClassScanner.getClasses(Constants.LIFE_FORMS_PACKAGE);
+        Set<Class<?>> classes = ClassScanner.getClasses(Constants.LIFE_FORMS_PACKAGE);
         speciesConfig = SpeciesConfig.getSpeciesConfig();
         speciesConfig.addSpec(classes);
-
+        speciesConfig.loadFoodDiet();
     }
 
     public void createIsland() {
-        island = new Island(ISLAND_WIDTH, ISLAND_LENGTH, factory, speciesConfig.getAllParameters().keySet());
+        island = new Island(ISLAND_WIDTH, ISLAND_LENGTH, factory, speciesConfig.getExitingLifeForms());
     }
 
     public void initializeFactory() {
@@ -76,7 +77,7 @@ public class Initializer {
     }
 
     public void initializeSectors(Island island) {
-        int islandLength = island.getIsland().length;
+        int islandLength = island.getIslandMap().length;
         int step = islandLength / NUMBER_OF_THREADS;
         int start = 0;
         while (start < islandLength) {
@@ -84,5 +85,9 @@ public class Initializer {
             sectors.add(new Sector(start, end));
             start = end + 1;
         }
+    }
+
+    public SpeciesConfig getSpeciesConfig(){
+        return speciesConfig;
     }
 }

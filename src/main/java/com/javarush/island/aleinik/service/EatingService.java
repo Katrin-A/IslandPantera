@@ -1,13 +1,68 @@
 package com.javarush.island.aleinik.service;
 
 import com.javarush.island.aleinik.config.Sector;
+import com.javarush.island.aleinik.config.SpeciesConfig;
+import com.javarush.island.aleinik.entity.island.Cell;
 import com.javarush.island.aleinik.entity.island.Island;
+import com.javarush.island.aleinik.entity.lifeforms.LifeForm;
+import com.javarush.island.aleinik.entity.lifeforms.animals.AnimalGroup;
 
-public class EatingService implements GameService{
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+public class EatingService implements GameService {
+    private final SpeciesConfig config;
+
+    public EatingService(SpeciesConfig config) {
+        this.config = config;
+    }
+
 
     @Override
     public void performTask(Island island, Sector sector) {
-        //go over all cells and perform eating for each creature
+        for (int row = sector.startRow(); row < sector.endRow(); row++) {
+
+            for (int col = 0; col < island.getIslandMap()[0].length; col++) {
+
+                Cell cell = island.getIslandMap()[row][col];
+                cell.getLock().lock();
+                try {
+                    Map<Class<? extends LifeForm>, Set<LifeForm>> inhabitants = cell.getInhabitants();
+                    inhabitants.forEach((aClass, lifeForms) -> {
+                        for (LifeForm lifeForm : lifeForms) {
+                            if (lifeForm instanceof AnimalGroup) {
+                                Map<Class<? extends LifeForm>, Integer> diet = config.getDiet(aClass);
+                                if (diet == null || diet.isEmpty()) {
+                                    return;
+                                }
+                                Map<Class<? extends LifeForm>, Integer> availableDiet = getAvailableDiet(diet, inhabitants);
+                                if (availableDiet == null || availableDiet.isEmpty()) {
+                                    return;
+                                }
+                                AnimalGroup predator = (AnimalGroup) lifeForm;
+                                predator.eat(availableDiet, inhabitants);
+                            }
+                        }
+                        }
+                    );
+                } finally {
+                    cell.getLock().unlock();
+                }
+
+            }
+        }
+
+    }
+
+    private static Map<Class<? extends LifeForm>, Integer> getAvailableDiet(Map<Class<? extends LifeForm>, Integer> diet, Map<Class<? extends LifeForm>, Set<LifeForm>> inhabitants) {
+        return diet.entrySet()
+                .stream()
+                .filter(entry -> inhabitants.containsKey(entry.getKey()))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue
+                ));
     }
 
 

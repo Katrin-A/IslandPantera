@@ -1,5 +1,6 @@
 package com.javarush.island.aleinik.entity.lifeforms.plants;
 
+import com.javarush.island.aleinik.entity.island.Cell;
 import com.javarush.island.aleinik.entity.lifeforms.LifeForm;
 
 public abstract class PlantGroup extends LifeForm {

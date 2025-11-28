@@ -1,9 +1,11 @@
 package com.javarush.island.aleinik.interfaces;
+import com.javarush.island.aleinik.entity.lifeforms.LifeForm;
 
-import com.javarush.island.aleinik.entity.island.Cell;
+import java.util.Map;
+import java.util.Set;
 
 @FunctionalInterface
 public interface Eat {
 
-    public boolean eat(Cell cell);
+    public boolean eat(Map<Class<? extends LifeForm>, Integer> diet, Map<Class<? extends LifeForm>, Set<LifeForm>> inhabitants);
 }
