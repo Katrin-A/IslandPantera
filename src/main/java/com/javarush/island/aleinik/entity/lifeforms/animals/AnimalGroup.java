@@ -2,15 +2,16 @@ package com.javarush.island.aleinik.entity.lifeforms.animals;
 
 import com.javarush.island.aleinik.entity.island.Cell;
 import com.javarush.island.aleinik.entity.lifeforms.LifeForm;
-import com.javarush.island.aleinik.interfaces.Eat;
-import com.javarush.island.aleinik.interfaces.Move;
+import com.javarush.island.aleinik.interfaces.Eatable;
+import com.javarush.island.aleinik.interfaces.Movable;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
-public abstract class AnimalGroup extends LifeForm implements Eat, Move {
+public abstract class AnimalGroup extends LifeForm implements Eatable, Movable {
     protected final double foodRequiredKg;
 
     protected AnimalGroup(int currentGroupNumber, int specieWeight, double foodRequiredKg) {
@@ -19,8 +20,21 @@ public abstract class AnimalGroup extends LifeForm implements Eat, Move {
     }
 
     @Override
-    public boolean move(Map<Class<? extends LifeForm>, Set<LifeForm>> inhabitants) {
-        return false;
+    public boolean move(Cell current, Cell target, int maxGroupsPerCell) {
+        if (!target.getLock().tryLock()) {
+            return false;
+        }
+        try {
+            Set<LifeForm> targetSet = target.getInhabitants().computeIfAbsent(this.getClass(), k -> new HashSet<>());
+            if (targetSet.size() >= maxGroupsPerCell) {
+                return false;
+            }
+            targetSet.add(this);
+            return true;
+
+        } finally {
+            target.getLock().unlock();
+        }
     }
 
 

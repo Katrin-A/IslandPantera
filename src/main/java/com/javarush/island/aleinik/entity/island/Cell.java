@@ -14,6 +14,15 @@ public class Cell {
     public final Lock lock = new ReentrantLock();
     private final LifeFormFactory factory;
     private Map<Class<? extends LifeForm>, Set<LifeForm>> inhabitants = new HashMap();
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
     private final int row;
     private final int column;
 

@@ -1,7 +1,6 @@
 package com.javarush.island.aleinik.entity.lifeforms;
 
 import com.javarush.island.aleinik.annotations.SpeciesInfo;
-import com.javarush.island.aleinik.entity.island.Cell;
 
 @SpeciesInfo(specieWeight = 0, maxPerCell = 0)
 public abstract class LifeForm {

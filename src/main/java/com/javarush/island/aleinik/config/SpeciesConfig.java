@@ -60,9 +60,6 @@ public class SpeciesConfig {
                         info.foodRequiredKg(),
                         info.maxGroupSize()
                 );
-                //TODO: remove sout
-                System.out.println("Adding class " + aClass.getSimpleName());
-
                 parameters.put((Class<? extends LifeForm>) aClass, p);
 
             }
@@ -125,5 +122,9 @@ public class SpeciesConfig {
 
     public Set<Class <? extends LifeForm>> getExitingLifeForms(){
         return parameters.keySet();
+    }
+
+    public Integer getSpeedLimit(Class<? extends LifeForm> aClass){
+        return parameters.get(aClass).getSpeedLimit();
     }
 }

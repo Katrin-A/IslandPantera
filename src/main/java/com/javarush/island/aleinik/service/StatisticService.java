@@ -59,7 +59,7 @@ public class StatisticService implements GameService {
         return stats;
     }
 
-
+    //TODO: move this code to the ConsoleView
     private void printTable(Map<Class<? extends LifeForm>, Integer> stats) {
         Map<String, Integer> printable = new LinkedHashMap<>();
         stats.forEach((cls, count) -> printable.put(cls.getSimpleName(), count));

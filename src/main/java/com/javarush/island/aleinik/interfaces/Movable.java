@@ -1,9 +1,8 @@
 package com.javarush.island.aleinik.interfaces;
-
 import com.javarush.island.aleinik.entity.island.Cell;
 
 @FunctionalInterface
-public interface Reproduce {
+public interface Movable {
 
-    public boolean reproduce(Cell cell);
+    public boolean move(Cell start, Cell target, int maxGroupCountPerCell);
 }

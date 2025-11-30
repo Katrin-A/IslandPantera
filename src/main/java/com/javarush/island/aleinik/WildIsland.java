@@ -22,7 +22,7 @@ public class WildIsland {
         processor.start();
 
         try {
-            Thread.sleep(3000);
+            Thread.sleep(5000);
         } catch (InterruptedException ignored) {}
 
         processor.shutdown();

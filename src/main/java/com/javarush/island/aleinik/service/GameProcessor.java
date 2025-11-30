@@ -32,7 +32,7 @@ public class GameProcessor {
     public void init() {
 
         services.add(new EatingService(config));
-//        services.add(new MovingService());
+        services.add(new MovingService(config));
         statisticsService = new StatisticService();
         executorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
         gameLoopScheduler = Executors.newSingleThreadScheduledExecutor();
