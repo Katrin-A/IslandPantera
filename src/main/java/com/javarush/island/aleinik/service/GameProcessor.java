@@ -15,11 +15,10 @@ import java.util.concurrent.*;
 import static com.javarush.island.aleinik.config.Constants.NUMBER_OF_THREADS;
 
 public class GameProcessor {
-    private List<GameService> services = new ArrayList<>();
+    private final List<GameService> services = new ArrayList<>();
     private ExecutorService executorService;
     private ScheduledExecutorService gameLoopScheduler;
-    private StatisticService statisticsService;
-    private View view;
+    private final View view;
 
 
     private final SpeciesConfig config;
@@ -41,7 +40,6 @@ public class GameProcessor {
         services.add(new EatingService(config));
         services.add(new ReproducingService(config, factory));
         services.add(new MovingService(config));
-        statisticsService = new StatisticService();
 
         executorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
         gameLoopScheduler = Executors.newSingleThreadScheduledExecutor();

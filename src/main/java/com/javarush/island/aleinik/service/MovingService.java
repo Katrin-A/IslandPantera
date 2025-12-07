@@ -43,11 +43,9 @@ public class MovingService implements GameService {
                             if (!(lifeForm instanceof Movable)) {
                                 continue;
                             }
-
                             int speed = config.getAllParameters().get(aClass).getSpeedLimit();
                             List<Cell> directions = getPossibleDirections(island, cell, speed);
                             int maxGroupsPerCell = config.getClassParameters(aClass).getMaxGroupsPerCell();
-
                             boolean moved = false;
                             for (int attempt = 0; attempt < 3 && !moved; attempt++) {
                                 Cell target = getRandomDirection(directions);

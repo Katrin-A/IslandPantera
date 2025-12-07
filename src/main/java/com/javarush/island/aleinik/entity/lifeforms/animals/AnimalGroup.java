@@ -37,12 +37,6 @@ public abstract class AnimalGroup extends LifeForm implements Eatable, Movable {
         }
     }
 
-
-    @Override
-    public boolean isDead() {
-        return getCurrentGroupNumber() <= 0;
-    }
-
     protected double getRequiredKg() {
         return currentGroupNumber * foodRequiredKg;
     }

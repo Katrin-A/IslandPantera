@@ -5,5 +5,5 @@ import com.javarush.island.aleinik.entity.island.Cell;
 @FunctionalInterface
 public interface Reproducible {
 
-    public boolean reproduce(Cell cell);
+    boolean reproduce(Cell cell);
 }

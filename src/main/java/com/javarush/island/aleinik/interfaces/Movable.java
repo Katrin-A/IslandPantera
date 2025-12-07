@@ -4,5 +4,5 @@ import com.javarush.island.aleinik.entity.island.Cell;
 @FunctionalInterface
 public interface Movable {
 
-    public boolean move(Cell start, Cell target, int maxGroupCountPerCell);
+    boolean move(Cell start, Cell target, int maxGroupCountPerCell);
 }

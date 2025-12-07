@@ -2,7 +2,6 @@ package com.javarush.island.aleinik.entity.lifeforms;
 
 import com.javarush.island.aleinik.config.Parameters;
 import com.javarush.island.aleinik.config.SpeciesConfig;
-import com.javarush.island.aleinik.entity.island.Cell;
 import com.javarush.island.aleinik.entity.lifeforms.animals.AnimalGroup;
 import com.javarush.island.aleinik.entity.lifeforms.plants.PlantGroup;
 
@@ -16,10 +15,7 @@ import static com.javarush.island.aleinik.config.Constants.INITIAL_PLANT_PERCENT
 import static java.lang.Math.floor;
 
 public class LifeFormFactory {
-    //TODO create validation for class type
-    //TODO create try-catch blocks instead of throwing it in the method signature
-
-    private SpeciesConfig speciesConfig;
+    private final SpeciesConfig speciesConfig;
 
 
     public LifeFormFactory(SpeciesConfig config) {
@@ -67,7 +63,6 @@ public class LifeFormFactory {
         }
 
         int initialTotalAnimals = Math.round(maxPerCell * initialSpeciePercentage / 100f);
-        //TODO: maybe better do a math calculation instead of for loop, but then how do I form a List?
         while (initialTotalAnimals > 0) {
             if (initialTotalAnimals < maxGroupSize) {
                 initialSpeciesPerGroup.add(initialTotalAnimals);

@@ -41,7 +41,7 @@ public class EatingService implements GameService {
 
                         while (iterator.hasNext()) {
                             LifeForm lifeForm = iterator.next();
-                            if (lifeForm instanceof Eatable) {
+                            if (lifeForm instanceof Eatable predator) {
                                 Map<Class<? extends LifeForm>, Integer> diet = config.getDiet(aClass);
                                 if (diet == null || diet.isEmpty()) {
                                     break;
@@ -51,7 +51,6 @@ public class EatingService implements GameService {
                                     lifeForm.loseEnergy(requiredFood);
                                     break;
                                 }
-                                Eatable predator = (Eatable) lifeForm;
                                 Set<LifeForm> deadPrey = predator.eat(availableDiet, inhabitants);
 
                                 deadPrey.forEach(dead -> {
