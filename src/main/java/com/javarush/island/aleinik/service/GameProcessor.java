@@ -61,11 +61,6 @@ public class GameProcessor {
             view.render(island, "Before " + service.getClass().getSimpleName());
             parallelInvoke(service);
             view.render(island, "After " + service.getClass().getSimpleName());
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
         }
     }
 
@@ -96,6 +91,11 @@ public class GameProcessor {
         } catch (InterruptedException ignored) {
         }
     }
+
+    public void awaitStop() throws InterruptedException {
+        gameLoopScheduler.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+    }
+
 
 
 }

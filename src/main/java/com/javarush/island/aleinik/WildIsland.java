@@ -25,9 +25,8 @@ public class WildIsland {
         processor.start();
 
         try {
-            Thread.sleep(20000);
-        } catch (InterruptedException ignored) {
-        }
+            processor.awaitStop(); // ⬅ добавим метод ниже
+        } catch (InterruptedException ignored) {}
 
         processor.shutdown();
 
