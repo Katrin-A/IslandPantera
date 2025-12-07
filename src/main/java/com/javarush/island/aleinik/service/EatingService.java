@@ -20,66 +20,85 @@ public class EatingService implements GameService {
         this.config = config;
     }
 
-
     @Override
     public void performTask(Island island, Sector sector) {
         Cell[][] map = island.getIslandMap();
 
         for (int row = sector.startRow(); row < sector.endRow(); row++) {
             for (int col = 0; col < map[0].length; col++) {
+
                 Cell cell = map[row][col];
                 cell.getLock().lock();
                 try {
                     Map<Class<? extends LifeForm>, Set<LifeForm>> inhabitants = cell.getInhabitants();
                     Set<Class<? extends LifeForm>> emptyKeys = new HashSet<>();
+
                     for (Map.Entry<Class<? extends LifeForm>, Set<LifeForm>> entry : inhabitants.entrySet()) {
+
                         Class<? extends LifeForm> aClass = entry.getKey();
                         Set<LifeForm> lifeForms = entry.getValue();
 
                         Iterator<LifeForm> iterator = lifeForms.iterator();
                         double requiredFood = config.getClassParameters(aClass).getFoodRequiredKg();
 
-                        while (iterator.hasNext()) {
-                            LifeForm lifeForm = iterator.next();
-                            if (lifeForm instanceof Eatable predator) {
-                                Map<Class<? extends LifeForm>, Integer> diet = config.getDiet(aClass);
-                                if (diet == null || diet.isEmpty()) {
-                                    break;
-                                }
-                                Map<Class<? extends LifeForm>, Integer> availableDiet = getAvailableDiet(diet, inhabitants);
-                                if (availableDiet == null || availableDiet.isEmpty()) {
-                                    lifeForm.loseEnergy(requiredFood);
-                                    break;
-                                }
-                                Set<LifeForm> deadPrey = predator.eat(availableDiet, inhabitants);
+                        processEatingLoop(iterator, aClass, lifeForms, inhabitants, requiredFood);
 
-                                deadPrey.forEach(dead -> {
-                                    Set<LifeForm> preySet = inhabitants.get(dead.getClass());
-                                    if (preySet != null) {
-                                        preySet.remove(dead);
-                                    }
-                                });
-
-                                if (lifeForm.isDead()) {
-                                    iterator.remove();
-                                }
-                            }
-                        }
                         if (lifeForms.isEmpty()) {
                             emptyKeys.add(aClass);
                         }
                     }
+
                     emptyKeys.forEach(inhabitants::remove);
+
                 } finally {
                     cell.getLock().unlock();
                 }
-
             }
         }
-
     }
 
-    private static Map<Class<? extends LifeForm>, Integer> getAvailableDiet(Map<Class<? extends LifeForm>, Integer> diet, Map<Class<? extends LifeForm>, Set<LifeForm>> inhabitants) {
+    private void processEatingLoop(
+            Iterator<LifeForm> iterator,
+            Class<? extends LifeForm> aClass,
+            Set<LifeForm> lifeForms,
+            Map<Class<? extends LifeForm>, Set<LifeForm>> inhabitants,
+            double requiredFood
+    ) {
+        while (iterator.hasNext()) {
+            LifeForm lifeForm = iterator.next();
+            if (lifeForm instanceof Eatable predator) {
+
+                Map<Class<? extends LifeForm>, Integer> diet = config.getDiet(aClass);
+                if (diet == null || diet.isEmpty()) {
+                    break;
+                }
+
+                Map<Class<? extends LifeForm>, Integer> availableDiet = getAvailableDiet(diet, inhabitants);
+                if (availableDiet == null || availableDiet.isEmpty()) {
+                    lifeForm.loseEnergy(requiredFood);
+                    break;
+                }
+
+                Set<LifeForm> deadPrey = predator.eat(availableDiet, inhabitants);
+
+                deadPrey.forEach(dead -> {
+                    Set<LifeForm> preySet = inhabitants.get(dead.getClass());
+                    if (preySet != null) {
+                        preySet.remove(dead);
+                    }
+                });
+
+                if (lifeForm.isDead()) {
+                    iterator.remove();
+                }
+            }
+        }
+    }
+
+    private static Map<Class<? extends LifeForm>, Integer> getAvailableDiet(
+            Map<Class<? extends LifeForm>, Integer> diet,
+            Map<Class<? extends LifeForm>, Set<LifeForm>> inhabitants
+    ) {
         return diet.entrySet()
                 .stream()
                 .filter(entry -> inhabitants.containsKey(entry.getKey()))
