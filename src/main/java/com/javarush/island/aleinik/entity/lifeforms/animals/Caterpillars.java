@@ -7,7 +7,6 @@ import com.javarush.island.aleinik.annotations.SpeciesInfo;
 public class Caterpillars extends AnimalGroup {
 
     public Caterpillars(int currentGroupNumber, int specieWeight, double foodRequiredKg) {
-        //TODO: make mice weight little - species weight should be double not int!
         super(currentGroupNumber, specieWeight, foodRequiredKg);
     }
 }

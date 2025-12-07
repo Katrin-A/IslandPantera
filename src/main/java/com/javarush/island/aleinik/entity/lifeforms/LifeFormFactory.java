@@ -32,7 +32,6 @@ public class LifeFormFactory {
         List<Integer> initialQuantity = getInitialQuantity(aClass);
         for (Integer integer : initialQuantity) {
             try {
-                // TODO: we have to check that this constructor has a required parameters
                 T animalGroup = aClass.getDeclaredConstructor(int.class, int.class, double.class)
                         .newInstance(
                                 integer,
