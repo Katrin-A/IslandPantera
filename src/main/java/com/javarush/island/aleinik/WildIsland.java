@@ -8,22 +8,22 @@ public class WildIsland {
     public static void main(String[] args) {
 
         //TODO: dont forget about how you're going to run the application
-
-        //TODO: move all the method from gameRunner into the run method of the class
         Initializer initializer = new Initializer();
         initializer.init();
 
         GameProcessor processor = new GameProcessor(
                 initializer.getIsland(),
                 initializer.getSectors(),
-                initializer.getSpeciesConfig()
+                initializer.getSpeciesConfig(),
+                initializer.getFactory()
         );
         processor.init();
         processor.start();
 
         try {
-            Thread.sleep(5000);
-        } catch (InterruptedException ignored) {}
+            Thread.sleep(10000);
+        } catch (InterruptedException ignored) {
+        }
 
         processor.shutdown();
 

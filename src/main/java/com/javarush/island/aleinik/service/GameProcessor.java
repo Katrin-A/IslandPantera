@@ -3,6 +3,7 @@ package com.javarush.island.aleinik.service;
 import com.javarush.island.aleinik.config.Sector;
 import com.javarush.island.aleinik.config.SpeciesConfig;
 import com.javarush.island.aleinik.entity.island.Island;
+import com.javarush.island.aleinik.entity.lifeforms.LifeFormFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,19 +21,23 @@ public class GameProcessor {
     private final SpeciesConfig config;
     private final List<Sector> sectors;
     private final Island island;
+    private final LifeFormFactory factory;
     private volatile boolean isRunning = true;
 
 
-    public GameProcessor(Island island, List<Sector> sectors, SpeciesConfig config) {
+    public GameProcessor(Island island, List<Sector> sectors, SpeciesConfig config, LifeFormFactory factory) {
         this.island = island;
         this.sectors = sectors;
         this.config = config;
+        this.factory = factory;
     }
 
     public void init() {
-
         services.add(new EatingService(config));
+        services.add(new ReproducingService(config, factory));
         services.add(new MovingService(config));
+
+
         statisticsService = new StatisticService();
         executorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
         gameLoopScheduler = Executors.newSingleThreadScheduledExecutor();
@@ -43,7 +48,7 @@ public class GameProcessor {
     }
 
     private void tick() {
-        if(!isRunning){
+        if (!isRunning) {
             shutdown();
             return;
 
@@ -86,7 +91,7 @@ public class GameProcessor {
         }
     }
 
-    public void shutdown(){
+    public void shutdown() {
         isRunning = false;
         gameLoopScheduler.shutdown();
         executorService.shutdown();
@@ -94,7 +99,8 @@ public class GameProcessor {
         try {
             gameLoopScheduler.awaitTermination(2, TimeUnit.SECONDS);
             executorService.awaitTermination(2, TimeUnit.SECONDS);
-        } catch (InterruptedException ignored) {}
+        } catch (InterruptedException ignored) {
+        }
     }
 
 

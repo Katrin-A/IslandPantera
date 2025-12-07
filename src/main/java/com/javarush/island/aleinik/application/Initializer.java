@@ -6,8 +6,8 @@ import com.javarush.island.aleinik.config.SpeciesConfig;
 import com.javarush.island.aleinik.entity.island.Island;
 import com.javarush.island.aleinik.entity.lifeforms.LifeFormFactory;
 import com.javarush.island.aleinik.utils.ClassScanner;
+import lombok.Getter;
 
-import javax.xml.transform.Result;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -17,28 +17,21 @@ import static java.lang.Math.min;
 
 public class Initializer {
 
+    @Getter
     private SpeciesConfig speciesConfig;
 
-    public Island getIsland() {
-        return island;
-    }
-
+    @Getter
     private Island island;
-    private LifeFormFactory factory;
 
-    public List<Sector> getSectors() {
-        return sectors;
-    }
-
+    @Getter
     private List<Sector> sectors = new ArrayList<>();
 
-    //TODO: use view to set statistics
+    public LifeFormFactory getFactory() {
+        return factory;
+    }
 
-//    private final View view;
+    private LifeFormFactory factory;
 
-//    public GameRunner(View view) {
-//        this.view = view;
-//    }
 
     public Initializer() {
     }
@@ -51,17 +44,7 @@ public class Initializer {
 
     }
 
-    public Result run() {
-
-        //TODO: get View , get configuration
-        // Create map and start simulation
-        // Print result every second
-        return null;
-    }
-
     private void setConfig() {
-        //TODO: remove sout
-        System.out.println("Setting up Config");
         Set<Class<?>> classes = ClassScanner.getClasses(Constants.LIFE_FORMS_PACKAGE);
         speciesConfig = SpeciesConfig.getSpeciesConfig();
         speciesConfig.addSpec(classes);
@@ -87,7 +70,4 @@ public class Initializer {
         }
     }
 
-    public SpeciesConfig getSpeciesConfig(){
-        return speciesConfig;
-    }
 }

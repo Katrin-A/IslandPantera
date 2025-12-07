@@ -48,38 +48,51 @@ public abstract class AnimalGroup extends LifeForm implements Eatable, Movable {
     }
 
     @Override
-    public boolean eat(Map<Class<? extends LifeForm>, Integer> diet,
-                       Map<Class<? extends LifeForm>, Set<LifeForm>> inhabitants) {
+    public Set<LifeForm> eat(Map<Class<? extends LifeForm>, Integer> diet,
+                             Map<Class<? extends LifeForm>, Set<LifeForm>> inhabitants) {
 
-        double[] requiredFood = {getRequiredKg()};
+        Set<LifeForm> deadPray = new HashSet<>();
+        double requiredFood = getRequiredKg();
 
-        diet.forEach((prayClass, chance) -> {
-            if (requiredFood[0] <= 0) return;
+        for (Map.Entry<Class<? extends LifeForm>, Integer> entry : diet.entrySet()) {
+            Class<? extends LifeForm> prayClass = entry.getKey();
+            Integer chance = entry.getValue();
+
+            if (requiredFood <= 0) break;
+
             Set<LifeForm> praySet = inhabitants.get(prayClass);
-            if (praySet == null || praySet.isEmpty()) return;
+            if (praySet == null || praySet.isEmpty()) {
+                continue;
+            }
 
             Iterator<LifeForm> iterator = praySet.iterator();
-            while (iterator.hasNext() && requiredFood[0] > 0) {
-                if (!successfulHunt(chance)) continue;
+            while (iterator.hasNext() && requiredFood > 0) {
+                if (this.isDead()) {
+                    break;
+                }
+                if (!successfulHunt(chance)) {
+                    this.loseEnergy(requiredFood);
+                    continue;
+                }
 
                 LifeForm pray = iterator.next();
                 double prayWeight = pray.getTotalWeight();
-                if (prayWeight <= requiredFood[0]) {
-                    requiredFood[0] -= prayWeight;
+                if (prayWeight <= requiredFood) {
+                    requiredFood -= prayWeight;
                     totalWeight += prayWeight;
-                    iterator.remove();
+                    deadPray.add(pray);
                 } else {
-                    totalWeight += requiredFood[0];
-                    pray.updateTotalWeight(prayWeight - requiredFood[0]);
-                    requiredFood[0] = 0;
+                    totalWeight += requiredFood;
+                    pray.updateWeightAndCount(prayWeight - requiredFood);
+                    requiredFood = 0;
 
                     if (pray.isDead()) {
-                        iterator.remove();
+                        deadPray.add(pray);
                     }
                 }
             }
-        });
-        return requiredFood[0] <= 0;
+        }
+        return deadPray;
     }
 
     private static boolean successfulHunt(Integer chance) {

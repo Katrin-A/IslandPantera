@@ -6,6 +6,9 @@ import com.javarush.island.aleinik.entity.island.Cell;
 import com.javarush.island.aleinik.entity.island.Island;
 import com.javarush.island.aleinik.entity.lifeforms.LifeForm;
 import com.javarush.island.aleinik.interfaces.Eatable;
+
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,23 +31,46 @@ public class EatingService implements GameService {
                 cell.getLock().lock();
                 try {
                     Map<Class<? extends LifeForm>, Set<LifeForm>> inhabitants = cell.getInhabitants();
-                    inhabitants.forEach((aClass, lifeForms) -> {
-                        for (LifeForm lifeForm : lifeForms) {
+                    Set<Class<? extends LifeForm>> emptyKeys = new HashSet<>();
+                    for (Map.Entry<Class<? extends LifeForm>, Set<LifeForm>> entry : inhabitants.entrySet()) {
+                        Class<? extends LifeForm> aClass = entry.getKey();
+                        Set<LifeForm> lifeForms = entry.getValue();
+
+                        Iterator<LifeForm> iterator = lifeForms.iterator();
+                        double requiredFood = config.getClassParameters(aClass).getFoodRequiredKg();
+
+                        while (iterator.hasNext()) {
+                            LifeForm lifeForm = iterator.next();
                             if (lifeForm instanceof Eatable) {
                                 Map<Class<? extends LifeForm>, Integer> diet = config.getDiet(aClass);
                                 if (diet == null || diet.isEmpty()) {
-                                    return;
+                                    break;
                                 }
                                 Map<Class<? extends LifeForm>, Integer> availableDiet = getAvailableDiet(diet, inhabitants);
                                 if (availableDiet == null || availableDiet.isEmpty()) {
-                                    return;
+                                    lifeForm.loseEnergy(requiredFood);
+                                    break;
                                 }
                                 Eatable predator = (Eatable) lifeForm;
-                                predator.eat(availableDiet, inhabitants);
+                                Set<LifeForm> deadPrey = predator.eat(availableDiet, inhabitants);
+
+                                deadPrey.forEach(dead -> {
+                                    Set<LifeForm> preySet = inhabitants.get(dead.getClass());
+                                    if (preySet != null) {
+                                        preySet.remove(dead);
+                                    }
+                                });
+
+                                if (lifeForm.isDead()) {
+                                    iterator.remove();
+                                }
                             }
                         }
+                        if (lifeForms.isEmpty()) {
+                            emptyKeys.add(aClass);
                         }
-                    );
+                    }
+                    emptyKeys.forEach(inhabitants::remove);
                 } finally {
                     cell.getLock().unlock();
                 }
@@ -63,6 +89,4 @@ public class EatingService implements GameService {
                         Map.Entry::getValue
                 ));
     }
-
-
 }

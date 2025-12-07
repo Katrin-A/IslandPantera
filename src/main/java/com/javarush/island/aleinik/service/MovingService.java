@@ -32,7 +32,10 @@ public class MovingService implements GameService {
                 cell.getLock().lock();
                 try {
                     Map<Class<? extends LifeForm>, Set<LifeForm>> inhabitants = cell.getInhabitants();
-                    inhabitants.forEach((aClass, lifeForms) -> {
+
+                    for (Map.Entry<Class<? extends LifeForm>, Set<LifeForm>> entry : inhabitants.entrySet()) {
+                        Class<? extends LifeForm> aClass = entry.getKey();
+                        Set<LifeForm> lifeForms = entry.getValue();
 
                         Iterator<LifeForm> iterator = lifeForms.iterator();
                         while (iterator.hasNext()) {
@@ -54,7 +57,7 @@ public class MovingService implements GameService {
                                 iterator.remove();
                             }
                         }
-                    });
+                    }
                 } finally {
                     cell.getLock().unlock();
                 }

@@ -7,5 +7,5 @@ import java.util.Set;
 @FunctionalInterface
 public interface Eatable {
 
-    public boolean eat(Map<Class<? extends LifeForm>, Integer> diet, Map<Class<? extends LifeForm>, Set<LifeForm>> inhabitants);
+    public Set<LifeForm> eat(Map<Class<? extends LifeForm>, Integer> diet, Map<Class<? extends LifeForm>, Set<LifeForm>> inhabitants);
 }

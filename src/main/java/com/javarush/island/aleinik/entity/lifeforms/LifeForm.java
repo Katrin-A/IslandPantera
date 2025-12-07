@@ -19,6 +19,12 @@ public abstract class LifeForm {
         this.totalWeight = specieWeight * currentGroupNumber;
     }
 
+    public void loseEnergy(double amount) {
+        this.totalWeight -= amount;
+        if (this.totalWeight < 0) this.totalWeight = 0;
+        this.currentGroupNumber = (int) (this.totalWeight / specieWeight);
+    }
+
     public double getTotalWeight() {
         return totalWeight;
     }
@@ -27,17 +33,13 @@ public abstract class LifeForm {
         return currentGroupNumber;
     }
 
-    public void updateTotalWeight(double totalWeight) {
+    public void updateWeightAndCount(double totalWeight) {
         this.totalWeight = totalWeight;
         this.currentGroupNumber = (int) (this.totalWeight / specieWeight);
     }
 
-    public double getCurrentWeightPerAnimal() {
-        return (double) totalWeight / currentGroupNumber;
-    }
-
     public boolean isDead() {
-        return false;
+        return getCurrentGroupNumber() <= 0;
     }
 
 
