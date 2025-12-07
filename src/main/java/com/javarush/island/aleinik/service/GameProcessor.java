@@ -4,7 +4,10 @@ import com.javarush.island.aleinik.config.Sector;
 import com.javarush.island.aleinik.config.SpeciesConfig;
 import com.javarush.island.aleinik.entity.island.Island;
 import com.javarush.island.aleinik.entity.lifeforms.LifeFormFactory;
+import com.javarush.island.aleinik.view.View;
 
+
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -16,6 +19,7 @@ public class GameProcessor {
     private ExecutorService executorService;
     private ScheduledExecutorService gameLoopScheduler;
     private StatisticService statisticsService;
+    private View view;
 
 
     private final SpeciesConfig config;
@@ -25,20 +29,20 @@ public class GameProcessor {
     private volatile boolean isRunning = true;
 
 
-    public GameProcessor(Island island, List<Sector> sectors, SpeciesConfig config, LifeFormFactory factory) {
+    public GameProcessor(Island island, List<Sector> sectors, SpeciesConfig config, LifeFormFactory factory, View view) {
         this.island = island;
         this.sectors = sectors;
         this.config = config;
         this.factory = factory;
+        this.view = view;
     }
 
     public void init() {
         services.add(new EatingService(config));
         services.add(new ReproducingService(config, factory));
         services.add(new MovingService(config));
-
-
         statisticsService = new StatisticService();
+
         executorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
         gameLoopScheduler = Executors.newSingleThreadScheduledExecutor();
     }
@@ -54,21 +58,11 @@ public class GameProcessor {
 
         }
         for (GameService service : services) {
-            statisticsService.printGlobalStatistics(
-                    config,
-                    island,
-                    "До " + service.getClass().getSimpleName()
-            );
-
+            view.render(island, "Before " + service.getClass().getSimpleName());
             parallelInvoke(service);
-
-            statisticsService.printGlobalStatistics(
-                    config,
-                    island,
-                    "После " + service.getClass().getSimpleName()
-            );
+            view.render(island, "After " + service.getClass().getSimpleName());
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

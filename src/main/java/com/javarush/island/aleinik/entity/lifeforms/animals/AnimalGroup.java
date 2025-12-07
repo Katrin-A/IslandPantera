@@ -51,49 +51,58 @@ public abstract class AnimalGroup extends LifeForm implements Eatable, Movable {
     public Set<LifeForm> eat(Map<Class<? extends LifeForm>, Integer> diet,
                              Map<Class<? extends LifeForm>, Set<LifeForm>> inhabitants) {
 
-        Set<LifeForm> deadPray = new HashSet<>();
-        double requiredFood = getRequiredKg();
+        Set<LifeForm> deadPrey = new HashSet<>();
+        double requiredFood = getRequiredKg(); // сколько нужно съесть
 
         for (Map.Entry<Class<? extends LifeForm>, Integer> entry : diet.entrySet()) {
-            Class<? extends LifeForm> prayClass = entry.getKey();
-            Integer chance = entry.getValue();
+            Class<? extends LifeForm> preyClass = entry.getKey();
+            int chance = entry.getValue();
 
-            if (requiredFood <= 0) break;
+            if (requiredFood <= 0 || this.isDead())
+                break;
 
-            Set<LifeForm> praySet = inhabitants.get(prayClass);
-            if (praySet == null || praySet.isEmpty()) {
+            Set<LifeForm> preySet = inhabitants.get(preyClass);
+            if (preySet == null || preySet.isEmpty())
                 continue;
-            }
 
-            Iterator<LifeForm> iterator = praySet.iterator();
-            while (iterator.hasNext() && requiredFood > 0) {
-                if (this.isDead()) {
-                    break;
-                }
+            Iterator<LifeForm> iterator = preySet.iterator();
+
+            while (iterator.hasNext() && requiredFood > 0 && !this.isDead()) {
+
+                LifeForm prey = iterator.next();
                 if (!successfulHunt(chance)) {
-                    this.loseEnergy(requiredFood);
+                    this.loseEnergy(foodRequiredKg);
+                    requiredFood -= foodRequiredKg;
+                    if (requiredFood < 0) requiredFood = 0;
                     continue;
                 }
 
-                LifeForm pray = iterator.next();
-                double prayWeight = pray.getTotalWeight();
-                if (prayWeight <= requiredFood) {
-                    requiredFood -= prayWeight;
-                    totalWeight += prayWeight;
-                    deadPray.add(pray);
-                } else {
-                    totalWeight += requiredFood;
-                    pray.updateWeightAndCount(prayWeight - requiredFood);
+                double preyWeight = prey.getTotalWeight();
+
+                if (preyWeight > requiredFood) {
+                    prey.updateWeightAndCount(preyWeight - requiredFood);
+                    this.totalWeight += requiredFood;
                     requiredFood = 0;
 
-                    if (pray.isDead()) {
-                        deadPray.add(pray);
+                    if (prey.isDead()) {
+                        deadPrey.add(prey);
+                    }
+
+                } else {
+                    this.totalWeight += preyWeight;
+                    requiredFood -= preyWeight;
+                    prey.updateWeightAndCount(0);
+
+                    if (prey.isDead()) {
+                        deadPrey.add(prey);
                     }
                 }
             }
         }
-        return deadPray;
+
+        return deadPrey;
     }
+
 
     private static boolean successfulHunt(Integer chance) {
         int roll = ThreadLocalRandom.current().nextInt(100);

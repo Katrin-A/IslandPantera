@@ -1,8 +1,91 @@
 {
-  "FoxPack": {
-    "DuckFlock": 60
+  "Wolves": {
+    "Horses": 10,
+    "Deer": 15,
+    "Rabbits": 60,
+    "Mice": 80,
+    "Goats": 60,
+    "Sheep": 70,
+    "Boars": 15,
+    "Buffaloes": 10,
+    "Ducks": 40
   },
-  "DuckFlock": {
+
+  "Boas": {
+    "Foxes": 15,
+    "Rabbits": 20,
+    "Mice": 40,
+    "Ducks": 10
+  },
+
+  "Foxes": {
+    "Rabbits": 70,
+    "Mice": 90,
+    "Ducks": 60,
+    "Caterpillars": 40
+  },
+
+  "Bears": {
+    "Boas": 80,
+    "Horses": 40,
+    "Deer": 80,
+    "Rabbits": 80,
+    "Mice": 90,
+    "Goats": 70,
+    "Sheep": 70,
+    "Boars": 50,
+    "Buffaloes": 20,
+    "Ducks": 10
+  },
+
+  "Eagles": {
+    "Foxes": 10,
+    "Rabbits": 90,
+    "Mice": 90,
+    "Ducks": 80
+  },
+
+  "Horses": {
+    "Grass": 100
+  },
+
+  "Deer": {
+    "Grass": 100
+  },
+
+  "Rabbits": {
+    "Grass": 100
+  },
+
+  "Mice": {
+    "Caterpillars": 90,
+    "Grass": 100
+  },
+
+  "Goats": {
+    "Grass": 100
+  },
+
+  "Sheep": {
+    "Grass": 100
+  },
+
+  "Boars": {
+    "Mice": 50,
+    "Caterpillars": 90,
+    "Grass": 100
+  },
+
+  "Buffaloes": {
+    "Grass": 100
+  },
+
+  "Ducks": {
+    "Caterpillars": 90,
+    "Grass": 100
+  },
+
+  "Caterpillars": {
     "Grass": 100
   }
 }

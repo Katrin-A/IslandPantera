@@ -10,7 +10,13 @@ public abstract class PlantGroup extends LifeForm {
 
     @Override
     public boolean isDead() {
-        return currentGroupNumber <= 0;
+        return this.currentGroupNumber <= 0;
+    }
+
+    @Override
+    public void updateWeightAndCount(double totalWeight) {
+        this.totalWeight = totalWeight;
+        this.currentGroupNumber = Math.max(1, (int)Math.round(totalWeight / specieWeight));
     }
 
 
